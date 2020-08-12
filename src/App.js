@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Header from "./components/Header";
+import Form from "./components/Form";
+import { Message } from "./components/Message";
+import { Result } from "./components/Result";
+import Spinner from "./components/Spinner";
 
-function App() {
+const App = () => {
+  //defino los states:
+  const [cantidad, setCantidad] = useState(0);
+  const [plazo, setPlazo] = useState("");
+  const [total, setTotal] = useState(0);
+  const [cargando, setCargando] = useState(false);
+
+  //esta es la carga condicional de componentes:
+  let componente;
+
+  if (cargando) {
+    componente = <Spinner />;
+  } else if (total === 0) {
+    componente = <Message />;
+  } else {
+    componente = <Result total={total} plazo={plazo} cantidad={cantidad} />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <>
+      <Header titulo="cotizador de prestamos" />
 
+      <div className="container">
+        <Form
+          cantidad={cantidad}
+          setCantidad={setCantidad}
+          plazo={plazo}
+          setPlazo={setPlazo}
+          setTotal={setTotal}
+          setCargando={setCargando}
+        />
+        <div className="mensajes">{componente}</div>
+      </div>
+    </>
+  );
+};
 export default App;
